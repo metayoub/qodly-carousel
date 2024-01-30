@@ -1,13 +1,38 @@
 import { ESetting, TSetting, DEFAULT_ITERATOR } from '@ws-ui/webform-editor';
 import { BASIC_SETTINGS, DEFAULT_SETTINGS, load, ETextFieldModifier } from '@ws-ui/webform-editor';
 import { validateServerSide } from '@ws-ui/shared';
-
+import { FaLongArrowAltRight, FaLongArrowAltLeft } from 'react-icons/fa';
 const commonSettings: TSetting[] = [
   {
     key: 'name',
     label: 'Name',
     type: ESetting.TEXT_FIELD,
     defaultValue: 'Qodly',
+  },
+  {
+    key: 'loop',
+    label: 'Loop',
+    type: ESetting.CHECKBOX,
+    defaultValue: true,
+  },
+  {
+    label: 'Direction',
+    type: ESetting.RADIOGROUP,
+    defaultValue: 'ltr',
+    key: 'direction',
+    multiple: false,
+    options: [
+      {
+        value: 'rtl',
+        tooltip: 'Righ to Left',
+        icon: FaLongArrowAltLeft,
+      },
+      {
+        value: 'ltr',
+        tooltip: 'Left to Right',
+        icon: FaLongArrowAltRight,
+      },
+    ],
   },
 ];
 

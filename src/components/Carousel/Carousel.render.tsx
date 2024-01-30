@@ -8,36 +8,40 @@ import {
   unsubscribeFromDatasource,
 } from '@ws-ui/webform-editor';
 import cn from 'classnames';
-import { FC, useEffect, useState } from 'react';
+import { FC, useEffect } from 'react';
 import { ICarouselProps } from './Carousel.config';
 import { Element } from '@ws-ui/craftjs-core';
 import { EmblaOptionsType } from 'embla-carousel';
 import useEmblaCarousel from 'embla-carousel-react';
 
-const Carousel: FC<ICarouselProps> = ({ style, iterator, className, classNames = [] }) => {
+const Carousel: FC<ICarouselProps> = ({
+  direction,
+  style,
+  iterator,
+  className,
+  classNames = [],
+}) => {
   const { connect } = useRenderer();
-  const options: EmblaOptionsType = { loop: true };
+  const options: EmblaOptionsType = { direction: direction };
   const {
     sources: { datasource: ds, currentElement: currentDs },
   } = useSources();
-  const { fetchIndex } = useDataLoader({
+  const { entities, fetchIndex } = useDataLoader({
     source: ds,
   });
   const { resolver } = useEnhancedEditor(selectResolver);
   const [emblaRef] = useEmblaCarousel(options);
-  const [count, setCount] = useState(0);
 
+  useEffect(() => {
+    fetchIndex(0);
+  }, []);
   useEffect(() => {
     if (!ds) {
       return;
     }
-    ds.getValue('length').then((value) => {
-      setCount(value || 0);
-    });
 
     const cb = () => {
       ds.getValue('length').then((length) => {
-        setCount(length);
         fetchIndex(0);
       });
     };
@@ -53,9 +57,9 @@ const Carousel: FC<ICarouselProps> = ({ style, iterator, className, classNames =
     <div ref={connect} style={style} className={cn('carousel', className, classNames)}>
       <div className="carousel_container overflow-hidden border" ref={emblaRef}>
         <div className="carousel_slides h-full flex">
-          {[...Array(count).keys()].map((index) => (
+          {entities.map((entity, index) => (
             <div
-              key={index}
+              key={entity.__KEY}
               className="carousel_slide relative h-full"
               style={{ flex: '0 0 100%' }}
             >

@@ -72,9 +72,14 @@ export default {
     style: {
       height: '300px',
     },
+    loop: true,
+    direction: 'ltr',
   },
 } as T4DComponentConfig<ICarouselProps>;
 
 export interface ICarouselProps extends webforms.ComponentProps {
   name?: string;
+  loop?: boolean;
+  direction?: 'ltr' | 'rtl';
 }
+
