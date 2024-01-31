@@ -1,0 +1,36 @@
+.embla__button {
+  position: absolute;
+  top: 50%;
+  transition: background-color 0.3s ease;
+}
+
+.embla__button:hover {
+  color: #e0e0e0;
+}
+.next-button {
+  right: 0;
+}
+.carousel_dots {
+  display: flex;
+  justify-content: center;
+  left: 40%;
+  bottom: 1.6rem;
+  position: absolute;
+}
+
+.carousel_dot {
+  width: 50px;
+  height: 4px;
+  background-color: #ccc;
+  border-radius: 10%;
+  margin-right: 6px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+.carousel_dot--active:after {
+  background-color: aqua;
+}
+
+.carousel_dot:hover {
+  background-color: #999;
+}

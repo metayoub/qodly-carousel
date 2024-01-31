@@ -2,16 +2,23 @@ import { ESetting, TSetting, DEFAULT_ITERATOR } from '@ws-ui/webform-editor';
 import { BASIC_SETTINGS, DEFAULT_SETTINGS, load, ETextFieldModifier } from '@ws-ui/webform-editor';
 import { validateServerSide } from '@ws-ui/shared';
 import { FaLongArrowAltRight, FaLongArrowAltLeft } from 'react-icons/fa';
+import { LuFlipVertical2, LuFlipHorizontal2 } from 'react-icons/lu';
 const commonSettings: TSetting[] = [
-  {
-    key: 'name',
-    label: 'Name',
-    type: ESetting.TEXT_FIELD,
-    defaultValue: 'Qodly',
-  },
   {
     key: 'loop',
     label: 'Loop',
+    type: ESetting.CHECKBOX,
+    defaultValue: true,
+  },
+  {
+    key: 'dots',
+    label: 'Dots',
+    type: ESetting.CHECKBOX,
+    defaultValue: true,
+  },
+  {
+    key: 'arrows',
+    label: 'Arrows',
     type: ESetting.CHECKBOX,
     defaultValue: true,
   },
@@ -33,6 +40,32 @@ const commonSettings: TSetting[] = [
         icon: FaLongArrowAltRight,
       },
     ],
+  },
+  {
+    label: 'Orientation',
+    type: ESetting.RADIOGROUP,
+    defaultValue: 'x',
+    key: 'axis',
+    multiple: false,
+    options: [
+      {
+        value: 'y',
+        tooltip: 'vertical',
+        icon: LuFlipVertical2,
+      },
+      {
+        value: 'x',
+        tooltip: 'Horizontal',
+        icon: LuFlipHorizontal2,
+      },
+    ],
+  },
+
+  {
+    key: 'autoplay',
+    label: 'Auto play',
+    type: ESetting.CHECKBOX,
+    defaultValue: true,
   },
 ];
 

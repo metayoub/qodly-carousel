@@ -13,7 +13,7 @@ import { ICarouselProps } from './Carousel.config';
 import { BsFillInfoCircleFill } from 'react-icons/bs';
 
 const Carousel: FC<ICarouselProps> = ({ style, datasource, className, classNames = [] }) => {
-  const options: EmblaOptionsType = { loop: true };
+  const options: EmblaOptionsType = { axis: 'y', loop: true };
   const { resolver } = useEnhancedEditor(selectResolver);
   const {
     connectors: { connect },

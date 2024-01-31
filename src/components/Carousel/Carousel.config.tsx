@@ -68,18 +68,25 @@ export default {
   },
   defaultProps: {
     iterable: true,
-    name: 'Qodly',
     style: {
       height: '300px',
     },
     loop: true,
     direction: 'ltr',
+    dots: true,
+    arrows: true,
+    axis: 'x',
+    autoplayInterval: 5000,
+    autoplay: true,
   },
 } as T4DComponentConfig<ICarouselProps>;
 
 export interface ICarouselProps extends webforms.ComponentProps {
-  name?: string;
   loop?: boolean;
   direction?: 'ltr' | 'rtl';
+  dots?: boolean;
+  axis?: 'y' | 'x';
+  arrows?: boolean;
+  autoplayInterval?: number;
+  autoplay: boolean;
 }
-
