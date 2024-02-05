@@ -12,12 +12,13 @@ import cn from 'classnames';
 import { Element } from '@ws-ui/craftjs-core';
 import { EmblaOptionsType } from 'embla-carousel';
 import useEmblaCarousel from 'embla-carousel-react';
-import './Carousel.css';
 import { ICarouselProps } from './Carousel.config';
 
 const Carousel: FC<ICarouselProps> = ({
   direction,
   loop,
+  icon1,
+  icon2,
   arrows,
   axis,
   dots,
@@ -90,14 +91,10 @@ const Carousel: FC<ICarouselProps> = ({
   return (
     <>
       <div ref={connect} style={style} className={cn('carousel', className, classNames)}>
-        <div className="carousel_container overflow-hidden border" ref={emblaRef}>
-          <div className="carousel_slides h-full flex">
+        <div className="embla_container overflow-hidden border" ref={emblaRef}>
+          <div className="embla_slides h-full flex">
             {entities.map((entity, index) => (
-              <div
-                key={entity.__KEY}
-                className="carousel_slide relative h-full"
-                style={{ flex: '0 0 100%', paddingLeft: 'var(--slide-spacing)' }}
-              >
+              <div key={entity.__KEY} className="embla_slide relative h-full flex-shrink-0 w-full">
                 <EntityProvider
                   index={index}
                   selection={ds}
@@ -120,48 +117,44 @@ const Carousel: FC<ICarouselProps> = ({
           <div>
             {arrows && (
               <div>
-                <button onClick={handlePrev} className="embla__button">
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    fill="none"
-                    viewBox="0 0 27 27"
-                    stroke="currentColor"
-                    className="w-10 h-10"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M15 19l-7-7 7-7"
-                    />
-                  </svg>
+                <button
+                  onClick={handlePrev}
+                  className="absolute top-1/2 transform -translate-y-1/2 embla_button"
+                >
+                  <span
+                    className={cn(
+                      'fa fd-component',
+                      'fd-icon',
+                      icon1,
+                      classNames,
+                      'w-7 h-auto fill-current text-gray-400 hover:text-gray-700 ',
+                    )}
+                  ></span>
                 </button>
 
-                <button onClick={handleNext} className="embla__button next-button">
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    fill="none"
-                    viewBox="0 0 27 27"
-                    stroke="currentColor"
-                    className="w-10 h-10"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M9 5l7 7-7 7"
-                    />
-                  </svg>
+                <button
+                  onClick={handleNext}
+                  className="absolute text-zinc-950 hover:text-zinc-400 right-0 top-1/2 transform -translate-y-1/2 right-0 embla_button"
+                >
+                  <span
+                    className={cn(
+                      'fa fd-component',
+                      'fd-icon',
+                      icon2,
+                      classNames,
+                      'w-7 h-auto fill-current ml-2 text-gray-400 hover:text-gray-700  ',
+                    )}
+                  ></span>
                 </button>
               </div>
             )}
             {dots && (
-              <div className="carousel_dots">
+              <div className=" flex justify-center relative  bottom-2  hover:bg-black embla_dots">
                 {entities.map((_, index) => (
                   <div
                     key={index}
                     onClick={() => emblaApi.scrollTo(index)}
-                    className={`carousel_dot ${index === emblaApi.selectedScrollSnap() ? 'carousel_dot--active' : ''}`}
+                    className={` embla_dot w-8 h-1 bg-gray-400 hover:bg-gray-600 rounded-full mx-1 cursor-pointer transition duration-300 ${index === emblaApi.selectedScrollSnap() ? 'bg-aqua' : ' bg-gray-400 hover:bg-gray-700'}`}
                   ></div>
                 ))}
               </div>

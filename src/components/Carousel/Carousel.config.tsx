@@ -78,6 +78,8 @@ export default {
     axis: 'x',
     autoplayInterval: 5000,
     autoplay: true,
+    icon1: 'fa-star',
+    icon2: 'fa-star',
   },
 } as T4DComponentConfig<ICarouselProps>;
 
@@ -89,4 +91,6 @@ export interface ICarouselProps extends webforms.ComponentProps {
   arrows?: boolean;
   autoplayInterval?: number;
   autoplay: boolean;
+  icon1: string;
+  icon2: string;
 }

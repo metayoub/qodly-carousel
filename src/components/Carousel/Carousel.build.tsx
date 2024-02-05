@@ -25,12 +25,12 @@ const Carousel: FC<ICarouselProps> = ({ style, datasource, className, classNames
       <div className="carousel_container overflow-hidden border" ref={emblaRef}>
         {datasource ? (
           <div className="carousel_slides h-full flex">
-            <div className="carousel_slide relative h-full" style={{ flex: '0 0 100%' }}>
+            <div className="carousel_slide relative h-full flex-shrink-0 w-full">
               <IteratorProvider>
                 <Element
                   id="carousel"
                   className="h-full w-full"
-                  role="accordion-header"
+                  role="carousel-header"
                   is={resolver.StyleBox}
                   deletable={false}
                   canvas

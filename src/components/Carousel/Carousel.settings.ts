@@ -67,6 +67,16 @@ const commonSettings: TSetting[] = [
     type: ESetting.CHECKBOX,
     defaultValue: true,
   },
+  {
+    key: 'icon1',
+    label: 'Icon next',
+    type: ESetting.ICON_PICKER,
+  },
+  {
+    key: 'icon2',
+    label: 'Icon previous',
+    type: ESetting.ICON_PICKER,
+  },
 ];
 
 const dataAccessSettings: TSetting[] = [
