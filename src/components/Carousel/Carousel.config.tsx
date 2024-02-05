@@ -78,8 +78,8 @@ export default {
     axis: 'x',
     autoplayInterval: 5000,
     autoplay: true,
-    icon1: 'fa-star',
-    icon2: 'fa-star',
+    icon1: 'fa-chevron-right',
+    icon2: 'fa-chevron-left',
   },
 } as T4DComponentConfig<ICarouselProps>;
 

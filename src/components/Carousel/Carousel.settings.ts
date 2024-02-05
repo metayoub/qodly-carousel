@@ -71,11 +71,13 @@ const commonSettings: TSetting[] = [
     key: 'icon1',
     label: 'Icon next',
     type: ESetting.ICON_PICKER,
+    defaultValue: 'fa-chevron-right',
   },
   {
     key: 'icon2',
     label: 'Icon previous',
     type: ESetting.ICON_PICKER,
+    defaultValue: 'fa-chevron-left',
   },
 ];
 

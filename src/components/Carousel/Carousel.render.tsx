@@ -87,14 +87,17 @@ const Carousel: FC<ICarouselProps> = ({
 
   const handlePrev = () => emblaApi && emblaApi.scrollPrev();
   const handleNext = () => emblaApi && emblaApi.scrollNext();
-
+  console.log('icon', icon2);
   return (
     <>
       <div ref={connect} style={style} className={cn('carousel', className, classNames)}>
-        <div className="embla_container overflow-hidden border" ref={emblaRef}>
-          <div className="embla_slides h-full flex">
+        <div className="carousel_container overflow-hidden border" ref={emblaRef}>
+          <div className="carousel_slides h-full flex">
             {entities.map((entity, index) => (
-              <div key={entity.__KEY} className="embla_slide relative h-full flex-shrink-0 w-full">
+              <div
+                key={entity.__KEY}
+                className="carousel_slide relative h-full flex-shrink-0 w-full"
+              >
                 <EntityProvider
                   index={index}
                   selection={ds}
@@ -119,13 +122,13 @@ const Carousel: FC<ICarouselProps> = ({
               <div>
                 <button
                   onClick={handlePrev}
-                  className="absolute top-1/2 transform -translate-y-1/2 embla_button"
+                  className="absolute top-1/2 transform -translate-y-1/2 carousel_button"
                 >
                   <span
                     className={cn(
                       'fa fd-component',
                       'fd-icon',
-                      icon1,
+                      icon2,
                       classNames,
                       'w-7 h-auto fill-current text-gray-400 hover:text-gray-700 ',
                     )}
@@ -134,13 +137,13 @@ const Carousel: FC<ICarouselProps> = ({
 
                 <button
                   onClick={handleNext}
-                  className="absolute text-zinc-950 hover:text-zinc-400 right-0 top-1/2 transform -translate-y-1/2 right-0 embla_button"
+                  className="absolute text-zinc-950 hover:text-zinc-400 right-0 top-1/2 transform -translate-y-1/2 right-0 carousel_button"
                 >
                   <span
                     className={cn(
                       'fa fd-component',
                       'fd-icon',
-                      icon2,
+                      icon1,
                       classNames,
                       'w-7 h-auto fill-current ml-2 text-gray-400 hover:text-gray-700  ',
                     )}
@@ -149,12 +152,19 @@ const Carousel: FC<ICarouselProps> = ({
               </div>
             )}
             {dots && (
-              <div className=" flex justify-center relative  bottom-2  hover:bg-black embla_dots">
+
+              <div className=" flex justify-center relative  bottom-2  hover:bg-black carousel_dots">
+             
                 {entities.map((_, index) => (
-                  <div
+                 <div
                     key={index}
                     onClick={() => emblaApi.scrollTo(index)}
-                    className={` embla_dot w-8 h-1 bg-gray-400 hover:bg-gray-600 rounded-full mx-1 cursor-pointer transition duration-300 ${index === emblaApi.selectedScrollSnap() ? 'bg-aqua' : ' bg-gray-400 hover:bg-gray-700'}`}
+                    className={cn(
+                      'carousel_dot w-8 h-1 bg-gray-400 hover:bg-gray-600 rounded-full mx-1 cursor-pointer transition duration-300',
+                      {
+                        'bg-gray-900 hover:bg-gray-700': index === emblaApi.selectedScrollSnap(),
+                      },
+                    )}
                   ></div>
                 ))}
               </div>

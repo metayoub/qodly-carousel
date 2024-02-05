@@ -12,13 +12,27 @@ import useEmblaCarousel from 'embla-carousel-react';
 import { ICarouselProps } from './Carousel.config';
 import { BsFillInfoCircleFill } from 'react-icons/bs';
 
-const Carousel: FC<ICarouselProps> = ({ style, datasource, className, classNames = [] }) => {
-  const options: EmblaOptionsType = { axis: 'y', loop: true };
+const Carousel: FC<ICarouselProps> = ({
+  arrows,
+  direction,
+  icon1,
+  dots,
+  loop,
+  axis,
+  icon2,
+  style,
+  datasource,
+  className,
+  classNames = [],
+}) => {
+  const options: EmblaOptionsType = { direction: direction, axis: axis, loop: loop };
   const { resolver } = useEnhancedEditor(selectResolver);
   const {
     connectors: { connect },
   } = useEnhancedNode();
-  const [emblaRef] = useEmblaCarousel(options);
+  const [emblaRef, emblaApi] = useEmblaCarousel(options);
+  const handlePrev = () => emblaApi && emblaApi.scrollPrev();
+  const handleNext = () => emblaApi && emblaApi.scrollNext();
 
   return (
     <div ref={connect} style={style} className={cn('carousel', className, classNames)}>
@@ -36,6 +50,48 @@ const Carousel: FC<ICarouselProps> = ({ style, datasource, className, classNames
                   canvas
                 />
               </IteratorProvider>
+            </div>
+            <div className="flex justify-center">
+              {arrows && (
+                <div>
+                  <button
+                    onClick={handlePrev}
+                    className=" absolute left-0 top-1/2 transform -translate-y-1/2 carousel_button"
+                  >
+                    <span
+                      className={cn(
+                        'fa fd-component',
+                        'fd-icon',
+                        icon2,
+                        classNames,
+                        'w-7 h-auto fill-current text-gray-700 hover:text-gray-700 ',
+                      )}
+                    ></span>
+                  </button>
+
+                  <button
+                    onClick={handleNext}
+                    className="absolute text-zinc-950 hover:text-zinc-400 right-0 top-1/2 transform -translate-y-1/2 right-0 carousel_button"
+                  >
+                    <span
+                      className={cn(
+                        'fa fd-component',
+                        'fd-icon',
+                        icon1,
+                        classNames,
+                        'w-7 h-auto fill-current ml-2 text-gray-700 hover:text-gray-700  ',
+                      )}
+                    ></span>
+                  </button>
+                </div>
+              )}
+              {dots && (
+                <div className="carousel_dots absolute bottom-1 w-full flex justify-center right-2">
+                  <div className="carousel_dot w-8 h-1 bg-gray-400 hover:bg-gray-600 rounded-full mx-2 cursor-pointer transition duration-300"></div>
+                  <div className="carousel_dot w-8 h-1 bg-gray-400 hover:bg-gray-600 rounded-full mx-2 cursor-pointer transition duration-300"></div>
+                  <div className="carousel_dot w-8 h-1 bg-gray-400 hover:bg-gray-600 rounded-full mx-2 cursor-pointer transition duration-300"></div>
+                </div>
+              )}
             </div>
           </div>
         ) : (
