@@ -1,4 +1,4 @@
-import { FC, useEffect } from 'react';
+import { FC, useCallback, useEffect, useState } from 'react';
 import {
   useRenderer,
   useSources,
@@ -40,7 +40,7 @@ const Carousel: FC<ICarouselProps> = ({
   });
   const { resolver } = useEnhancedEditor(selectResolver);
   const [emblaRef, emblaApi] = useEmblaCarousel(options);
-
+  const [SelectedScrollSnap, setSelectedScrollSnap] = useState(0);
   useEffect(() => {
     fetchIndex(0);
   }, []);
@@ -87,7 +87,19 @@ const Carousel: FC<ICarouselProps> = ({
 
   const handlePrev = () => emblaApi && emblaApi.scrollPrev();
   const handleNext = () => emblaApi && emblaApi.scrollNext();
-  console.log('icon', icon2);
+
+  const onSelect = useCallback(() => {
+    if (emblaApi) {
+      setSelectedScrollSnap(emblaApi.selectedScrollSnap());
+    }
+  }, [emblaApi]);
+
+  useEffect(() => {
+    if (!emblaApi) return;
+
+    emblaApi.on('reInit', onSelect);
+    emblaApi.on('select', onSelect);
+  }, [emblaApi, onSelect]);
   return (
     <>
       <div ref={connect} style={style} className={cn('carousel', className, classNames)}>
@@ -131,13 +143,14 @@ const Carousel: FC<ICarouselProps> = ({
                       icon2,
                       classNames,
                       'w-7 h-auto fill-current text-gray-400 hover:text-gray-700 ',
+                      'text-4xl',
                     )}
                   ></span>
                 </button>
 
                 <button
                   onClick={handleNext}
-                  className="absolute text-zinc-950 hover:text-zinc-400 right-0 top-1/2 transform -translate-y-1/2 right-0 carousel_button"
+                  className="  absolute text-zinc-950 hover:text-zinc-400 right-0 top-1/2 transform -translate-y-1/2 right-0 carousel_button"
                 >
                   <span
                     className={cn(
@@ -145,27 +158,31 @@ const Carousel: FC<ICarouselProps> = ({
                       'fd-icon',
                       icon1,
                       classNames,
-                      'w-7 h-auto fill-current ml-2 text-gray-400 hover:text-gray-700  ',
+                      'w-7 h-auto fill-current ml-2  bg-black hover:bg-white text-gray-500',
+                      'text-4xl ',
                     )}
+                   
                   ></span>
                 </button>
               </div>
             )}
             {dots && (
-
               <div className=" flex justify-center relative  bottom-2  hover:bg-black carousel_dots">
-             
                 {entities.map((_, index) => (
-                 <div
-                    key={index}
-                    onClick={() => emblaApi.scrollTo(index)}
-                    className={cn(
-                      'carousel_dot w-8 h-1 bg-gray-400 hover:bg-gray-600 rounded-full mx-1 cursor-pointer transition duration-300',
-                      {
-                        'bg-gray-900 hover:bg-gray-700': index === emblaApi.selectedScrollSnap(),
-                      },
-                    )}
-                  ></div>
+                  <div>
+                    <div
+                      key={index}
+                      onClick={() => emblaApi.scrollTo(index)}
+                      className={cn(
+                        'carousel_dot w-8 h-1 bg-gray-400 hover:bg-gray-600 rounded-full mx-1 cursor-pointer transition duration-300',
+                        {
+                          'bg-gray-900 hover:bg-gray-700': index === SelectedScrollSnap,
+                        },
+                      )}
+                    >
+                      {' '}
+                    </div>
+                  </div>
                 ))}
               </div>
             )}
