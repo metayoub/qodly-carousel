@@ -36,14 +36,14 @@ const Carousel: FC<ICarouselProps> = ({
 
   return (
     <div ref={connect} style={style} className={cn('carousel', className, classNames)}>
-      <div className="carousel_container overflow-hidden border" ref={emblaRef}>
+      <div className="carousel_container overflow-hidden border h-full" ref={emblaRef}>
         {datasource ? (
           <div className="carousel_slides h-full flex">
             <div className="carousel_slide relative h-full flex-shrink-0 w-full">
               <IteratorProvider>
                 <Element
                   id="carousel"
-                  className="h-full w-full"
+                  className="h-full"
                   role="carousel-header"
                   is={resolver.StyleBox}
                   deletable={false}
@@ -64,7 +64,7 @@ const Carousel: FC<ICarouselProps> = ({
                         'fd-icon',
                         icon2,
                         classNames,
-                        'w-7 h-auto fill-current text-gray-700 hover:text-gray-700 ',
+                        'w-7 h-auto fill-current text-gray-400 hover:text-gray-700 text-4xl',
                       )}
                     ></span>
                   </button>
@@ -79,7 +79,7 @@ const Carousel: FC<ICarouselProps> = ({
                         'fd-icon',
                         icon1,
                         classNames,
-                        'w-7 h-auto fill-current ml-2 text-gray-700 hover:text-gray-700  ',
+                        'w-7 h-auto fill-current ml-2 text-gray-400 hover:text-gray-700 text-4xl ',
                       )}
                     ></span>
                   </button>

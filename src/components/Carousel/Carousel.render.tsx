@@ -38,6 +38,7 @@ const Carousel: FC<ICarouselProps> = ({
   const { entities, fetchIndex } = useDataLoader({
     source: ds,
   });
+  
   const { resolver } = useEnhancedEditor(selectResolver);
   const [emblaRef, emblaApi] = useEmblaCarousel(options);
   const [SelectedScrollSnap, setSelectedScrollSnap] = useState(0);
@@ -96,14 +97,13 @@ const Carousel: FC<ICarouselProps> = ({
 
   useEffect(() => {
     if (!emblaApi) return;
-
     emblaApi.on('reInit', onSelect);
     emblaApi.on('select', onSelect);
   }, [emblaApi, onSelect]);
   return (
     <>
       <div ref={connect} style={style} className={cn('carousel', className, classNames)}>
-        <div className="carousel_container overflow-hidden border" ref={emblaRef}>
+        <div className="carousel_container overflow-hidden border h-full" ref={emblaRef}>
           <div className="carousel_slides h-full flex">
             {entities.map((entity, index) => (
               <div
@@ -143,14 +143,14 @@ const Carousel: FC<ICarouselProps> = ({
                       icon2,
                       classNames,
                       'w-7 h-auto fill-current text-gray-400 hover:text-gray-700 ',
-                      'text-4xl',
+                      'text-3xl',
                     )}
                   ></span>
                 </button>
 
                 <button
                   onClick={handleNext}
-                  className="  absolute text-zinc-950 hover:text-zinc-400 right-0 top-1/2 transform -translate-y-1/2 right-0 carousel_button"
+                  className="absolute text-zinc-950 hover:text-zinc-400 right-0 top-1/2 transform -translate-y-1/2 right-0 carousel_button"
                 >
                   <span
                     className={cn(
@@ -158,10 +158,9 @@ const Carousel: FC<ICarouselProps> = ({
                       'fd-icon',
                       icon1,
                       classNames,
-                      'w-7 h-auto fill-current ml-2  bg-black hover:bg-white text-gray-500',
-                      'text-4xl ',
+                      'w-7 h-auto fill-current ml-2 text-gray-400',
+                      'text-3xl ',
                     )}
-                   
                   ></span>
                 </button>
               </div>
@@ -176,12 +175,10 @@ const Carousel: FC<ICarouselProps> = ({
                       className={cn(
                         'carousel_dot w-8 h-1 bg-gray-400 hover:bg-gray-600 rounded-full mx-1 cursor-pointer transition duration-300',
                         {
-                          'bg-gray-900 hover:bg-gray-700': index === SelectedScrollSnap,
+                          'active bg-gray-900 hover:bg-gray-700': index === SelectedScrollSnap,
                         },
                       )}
-                    >
-                      {' '}
-                    </div>
+                    ></div>
                   </div>
                 ))}
               </div>
