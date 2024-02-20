@@ -1,12 +1,12 @@
 import { FC, useCallback, useEffect, useState } from 'react';
 import {
-  useRenderer,
   useSources,
   useEnhancedEditor,
   selectResolver,
   EntityProvider,
   useDataLoader,
   unsubscribeFromDatasource,
+  useEnhancedNode,
 } from '@ws-ui/webform-editor';
 import cn from 'classnames';
 import { Element } from '@ws-ui/craftjs-core';
@@ -29,8 +29,16 @@ const Carousel: FC<ICarouselProps> = ({
   autoplayInterval = 5000,
   autoplay,
 }) => {
-  const { connect } = useRenderer();
   const options: EmblaOptionsType = { direction: direction, axis: axis, loop: loop };
+  const { resolver, query } = useEnhancedEditor(selectResolver);
+  const {
+    linkedNodes,
+    connectors: { connect },
+  } = useEnhancedNode((node) => {
+    return { linkedNodes: node.data.linkedNodes };
+  });
+  const child = linkedNodes.carousel ? query.node(linkedNodes.carousel).get() : null;
+  const childStyle = child?.data.props.style;
 
   const {
     sources: { datasource: ds, currentElement: currentDs },
@@ -38,8 +46,7 @@ const Carousel: FC<ICarouselProps> = ({
   const { entities, fetchIndex } = useDataLoader({
     source: ds,
   });
-  
-  const { resolver } = useEnhancedEditor(selectResolver);
+
   const [emblaRef, emblaApi] = useEmblaCarousel(options);
   const [SelectedScrollSnap, setSelectedScrollSnap] = useState(0);
   useEffect(() => {
@@ -100,6 +107,7 @@ const Carousel: FC<ICarouselProps> = ({
     emblaApi.on('reInit', onSelect);
     emblaApi.on('select', onSelect);
   }, [emblaApi, onSelect]);
+
   return (
     <>
       <div ref={connect} style={style} className={cn('carousel', className, classNames)}>
@@ -108,7 +116,9 @@ const Carousel: FC<ICarouselProps> = ({
             {entities.map((entity, index) => (
               <div
                 key={entity.__KEY}
-                className="carousel_slide relative h-full flex-shrink-0 w-full"
+                className={`"${index === SelectedScrollSnap ? 'border-2 border-black ' : 'border-1'} carousel_slide relative h-full flex-shrink-0 w-full"`}
+                style={childStyle}
+                
               >
                 <EntityProvider
                   index={index}
@@ -118,7 +128,7 @@ const Carousel: FC<ICarouselProps> = ({
                 >
                   <Element
                     id="carousel"
-                    className="h-full w-full"
+                    className="h-full w-full "
                     role="carousel-header"
                     is={resolver.StyleBox}
                     canvas

@@ -6,7 +6,7 @@ import {
 } from '@ws-ui/webform-editor';
 import { Element } from '@ws-ui/craftjs-core';
 import cn from 'classnames';
-import { FC } from 'react';
+import { FC, CSSProperties } from 'react';
 import { EmblaOptionsType } from 'embla-carousel';
 import useEmblaCarousel from 'embla-carousel-react';
 import { ICarouselProps } from './Carousel.config';
@@ -23,13 +23,21 @@ const Carousel: FC<ICarouselProps> = ({
   style,
   datasource,
   className,
+
   classNames = [],
 }) => {
   const options: EmblaOptionsType = { direction: direction, axis: axis, loop: loop };
+  const Css: CSSProperties = {
+    width: style?.width || '100%',
+  };
   const { resolver } = useEnhancedEditor(selectResolver);
   const {
+    //linkedNodes,
     connectors: { connect },
-  } = useEnhancedNode();
+  } = useEnhancedNode((node) => {
+    return { linkedNodes: node.data.linkedNodes };
+  });
+
   const [emblaRef, emblaApi] = useEmblaCarousel(options);
   const handlePrev = () => emblaApi && emblaApi.scrollPrev();
   const handleNext = () => emblaApi && emblaApi.scrollNext();
@@ -38,12 +46,12 @@ const Carousel: FC<ICarouselProps> = ({
     <div ref={connect} style={style} className={cn('carousel', className, classNames)}>
       <div className="carousel_container overflow-hidden border h-full" ref={emblaRef}>
         {datasource ? (
-          <div className="carousel_slides h-full flex">
-            <div className="carousel_slide relative h-full flex-shrink-0 w-full">
+          <div className="carousel_slides h-full ">
+            <div className="carousel_slide relative h-full  w-full" style={Css}>
               <IteratorProvider>
                 <Element
                   id="carousel"
-                  className="h-full"
+                  className="h-full w-full"
                   role="carousel-header"
                   is={resolver.StyleBox}
                   deletable={false}
@@ -51,6 +59,7 @@ const Carousel: FC<ICarouselProps> = ({
                 />
               </IteratorProvider>
             </div>
+
             <div className="flex justify-center">
               {arrows && (
                 <div>

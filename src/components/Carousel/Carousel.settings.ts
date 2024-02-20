@@ -22,6 +22,7 @@ const commonSettings: TSetting[] = [
     type: ESetting.CHECKBOX,
     defaultValue: true,
   },
+
   {
     label: 'Direction',
     type: ESetting.RADIOGROUP,
@@ -121,8 +122,9 @@ const Settings: TSetting[] = [
     type: ESetting.GROUP,
     components: dataAccessSettings,
   },
- 
+
   ...load(DEFAULT_SETTINGS).filter(
+    'dataAccess',
     'style.color',
     'font',
     'color.boxshadow',

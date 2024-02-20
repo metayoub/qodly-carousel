@@ -6,20 +6,21 @@ Carousel component for Qodly studio
 
 the icon displayed in the button used for navigating to the next item
 Customizable carousel component for seamlessly presenting a variety of content in an interactive format.
-![carousel](public/carousel-min.png)
+![carousel](public/carousel.png)
 
 ## Properties
 
-| Name              | Type    | Default            | Description                                                                                           |
-| ----------------- | ------- | ------------------ | ----------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------- |
-| `Loop`            | Boolean | `true`             | Determines whether the carousel should loop back to the beginning after reaching the last item.       |
-| `Dots`            | Boolean | `true`             | Specifies whether to display navigation dots at the bottom of the carousel                            |
-| `Arrows`          | Boolean | `true`             | Controls the visibility of arrow buttons for navigating to the next or previous item in the carousel. |
-| `Direction`       | String  | `ltr`              | Direction Choose from `rtl`, `ltr`,                                                                   | Defines the direction of the carousel. It can be set to 'rtl'or 'ltr'depending on the reading direction of the content. |
-| `Orientation`     | String  | `x`                | Orientation Choose from `x`, `y`,                                                                     | Specifies the orientation of the carousel movement. It can be set to 'x' for horizontal movement or 'y' for vertical    |
-| `Auto play`       | Boolean | `true`             | Determines whether the carousel automatically advances to the next item at a predefined interval.     |
-| `Next button`     | Icon    | `fa-chevron-right` | The icon displayed in the button used for navigating to the next item .                               |
-| `Previous button` | Icon    | `fa-chevron-left`  | The icon displayed in the button used for navigating to the previous item .                           |
+| Name                | Type    | Default            | Description                                                                                           |
+| ------------------- | ------- | ------------------ | ----------------------------------------------------------------------------------------------------- |
+| `Slides to display` | Number  | `3`                | Determines the number of items you want to display per slide.                                         |
+| `Loop`              | Boolean | `true`             | Determines whether the carousel should loop back to the beginning after reaching the last item.       |
+| `Dots`              | Boolean | `true`             | Specifies whether to display navigation dots at the bottom of the carousel.                           |
+| `Arrows`            | Boolean | `true`             | Controls the visibility of arrow buttons for navigating to the next or previous item in the carousel. |
+| `Direction`         | String  | `ltr`              | Defines the direction of the carousel. Choose from `rtl`, `ltr`.                                      |
+| `Orientation`       | String  | `x`                | Specifies the orientation of the carousel movement. Choose from `x`, `y`.                             |
+| `Auto play`         | Boolean | `true`             | Determines whether the carousel automatically advances to the next item at a predefined interval.     |
+| `Next button`       | Icon    | `fa-chevron-right` | The icon displayed in the button used for navigating to the next item.                                |
+| `Previous button`   | Icon    | `fa-chevron-left`  | The icon displayed in the button used for navigating to the previous item.                            |
 
 ## DataSource
 
@@ -29,7 +30,7 @@ Customizable carousel component for seamlessly presenting a variety of content i
 
 ## Custom CSS
 
-![carousel css](public/carouselCss-min.png)
+![carousel css](public/carouselDocs.png)
 
 ```css
 /* Container for slides */

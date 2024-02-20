@@ -69,7 +69,7 @@ export default {
   defaultProps: {
     iterable: true,
     style: {
-      height: '300px',
+      height: '400px',
     },
     loop: true,
     direction: 'ltr',
