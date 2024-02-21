@@ -86,3 +86,5 @@ self .carousel_dot.active {
   background-color: #b22222;
 }
 ```
+## TODO
+Orientation && Direction:rtl 
