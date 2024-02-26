@@ -1,13 +1,84 @@
 import { ESetting, TSetting, DEFAULT_ITERATOR } from '@ws-ui/webform-editor';
 import { BASIC_SETTINGS, DEFAULT_SETTINGS, load, ETextFieldModifier } from '@ws-ui/webform-editor';
 import { validateServerSide } from '@ws-ui/shared';
-
+import { FaLongArrowAltRight, FaLongArrowAltLeft } from 'react-icons/fa';
+import { LuFlipVertical2, LuFlipHorizontal2 } from 'react-icons/lu';
 const commonSettings: TSetting[] = [
   {
-    key: 'name',
-    label: 'Name',
-    type: ESetting.TEXT_FIELD,
-    defaultValue: 'Qodly',
+    key: 'loop',
+    label: 'Loop',
+    type: ESetting.CHECKBOX,
+    defaultValue: true,
+  },
+  {
+    key: 'dots',
+    label: 'Dots',
+    type: ESetting.CHECKBOX,
+    defaultValue: true,
+  },
+  {
+    key: 'arrows',
+    label: 'Arrows',
+    type: ESetting.CHECKBOX,
+    defaultValue: true,
+  },
+
+  {
+    label: 'Direction',
+    type: ESetting.RADIOGROUP,
+    defaultValue: 'ltr',
+    key: 'direction',
+    multiple: false,
+    options: [
+      {
+        value: 'rtl',
+        tooltip: 'Righ to Left',
+        icon: FaLongArrowAltLeft,
+      },
+      {
+        value: 'ltr',
+        tooltip: 'Left to Right',
+        icon: FaLongArrowAltRight,
+      },
+    ],
+  },
+  {
+    label: 'Orientation',
+    type: ESetting.RADIOGROUP,
+    defaultValue: 'x',
+    key: 'axis',
+    multiple: false,
+    options: [
+      {
+        value: 'y',
+        tooltip: 'vertical',
+        icon: LuFlipVertical2,
+      },
+      {
+        value: 'x',
+        tooltip: 'Horizontal',
+        icon: LuFlipHorizontal2,
+      },
+    ],
+  },
+
+  {
+    key: 'autoplay',
+    label: 'Auto play',
+    type: ESetting.CHECKBOX,
+    defaultValue: true,
+  },
+  {
+    key: 'icon1',
+    label: 'Icon next',
+    type: ESetting.ICON_PICKER,
+    defaultValue: 'fa-chevron-right',
+  },
+  {
+    key: 'icon2',
+    label: 'Icon previous',
+    type: ESetting.ICON_PICKER,
+    defaultValue: 'fa-chevron-left',
   },
 ];
 
@@ -51,12 +122,25 @@ const Settings: TSetting[] = [
     type: ESetting.GROUP,
     components: dataAccessSettings,
   },
-  ...load(DEFAULT_SETTINGS).filter('dataAccess'),
+
+  ...load(DEFAULT_SETTINGS).filter(
+    'dataAccess',
+    'style.color',
+    'font',
+    'color.boxshadow',
+    'style.overflow',
+    'background',
+  ),
 ];
 
 export const BasicSettings: TSetting[] = [
   ...commonSettings,
-  ...load(BASIC_SETTINGS).filter('style.overflow'),
+  ...load(BASIC_SETTINGS).filter(
+    'style.color',
+    'font',
+    'color.boxshadow',
+    'style.overflow',
+    'background',
+  ),
 ];
-
 export default Settings;
