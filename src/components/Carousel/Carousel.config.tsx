@@ -75,7 +75,7 @@ export default {
     direction: 'ltr',
     dots: true,
     arrows: true,
-    axis: 'x',
+    axis: 'y',
     autoplayInterval: 5000,
     autoplay: true,
     icon1: 'fa-chevron-right',
