@@ -20,13 +20,13 @@
     "@ws-ui/craftjs-core": "^0.2.1-beta.3",
     "@ws-ui/craftjs-layers": "^0.2.1-beta.3",
     "@ws-ui/craftjs-utils": "^0.2.1-beta.3",
-    "@ws-ui/webform-editor": "0.1.13",
+    "@ws-ui/webform-editor": "^0.1.27",
     "embla-carousel-react": "^8.0.0-rc21",
     "react": "^17.0.2",
     "react-dom": "^17.0.2"
   },
   "devDependencies": {
-    "@qodly/cli": "^0.1.21",
+    "@qodly/cli": "^0.1.27",
     "@types/react": "^18.2.37",
     "@types/react-dom": "^18.2.15",
     "@typescript-eslint/eslint-plugin": "^6.10.0",
