@@ -1,6 +1,5 @@
 import { ESetting, TSetting, DEFAULT_ITERATOR } from '@ws-ui/webform-editor';
 import { BASIC_SETTINGS, DEFAULT_SETTINGS, load, ETextFieldModifier } from '@ws-ui/webform-editor';
-import { validateServerSide } from '@ws-ui/shared';
 import { FaLongArrowAltRight, FaLongArrowAltLeft } from 'react-icons/fa';
 import { LuFlipVertical2, LuFlipHorizontal2 } from 'react-icons/lu';
 const commonSettings: TSetting[] = [
@@ -104,7 +103,7 @@ const dataAccessSettings: TSetting[] = [
     key: 'serverSideRef',
     label: 'Server Side',
     type: ESetting.TEXT_FIELD,
-    hasError: validateServerSide,
+
     validateOnEnter: true,
   },
 ];

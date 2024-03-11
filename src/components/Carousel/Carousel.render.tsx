@@ -110,7 +110,6 @@ const Carousel: FC<ICarouselProps> = ({
   }, [emblaApi, onSelect]);
   return (
     <>
-      {' '}
       {ds?.initialValue !== undefined ? (
         <div ref={connect} style={style} className={cn('carousel', className, classNames)}>
           <div className="carousel_container overflow-hidden border h-full" ref={emblaRef}>
@@ -145,7 +144,7 @@ const Carousel: FC<ICarouselProps> = ({
                 <div>
                   <button
                     onClick={handlePrev}
-                    className="absolute top-1/2 transform -translate-y-1/2 carousel_button"
+                    className="absolute  top-1/2 transform -translate-y-1/2 carousel_button"
                   >
                     <span
                       className={cn(
