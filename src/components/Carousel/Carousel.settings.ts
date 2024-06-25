@@ -4,6 +4,12 @@ import { FaLongArrowAltRight, FaLongArrowAltLeft } from 'react-icons/fa';
 import { LuFlipVertical2, LuFlipHorizontal2 } from 'react-icons/lu';
 const commonSettings: TSetting[] = [
   {
+    key: 'autoplay',
+    label: 'Auto play',
+    type: ESetting.CHECKBOX,
+    defaultValue: true,
+  },
+  {
     key: 'loop',
     label: 'Loop',
     type: ESetting.CHECKBOX,
@@ -59,13 +65,6 @@ const commonSettings: TSetting[] = [
         icon: LuFlipHorizontal2,
       },
     ],
-  },
-
-  {
-    key: 'autoplay',
-    label: 'Auto play',
-    type: ESetting.CHECKBOX,
-    defaultValue: true,
   },
   {
     key: 'icon1',

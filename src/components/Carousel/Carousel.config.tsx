@@ -63,7 +63,7 @@ export default {
       },
     ],
     datasources: {
-      accept: ['entitysel', 'entity'],
+      accept: ['entitysel'],
     },
   },
   defaultProps: {
@@ -75,7 +75,7 @@ export default {
     direction: 'ltr',
     dots: true,
     arrows: true,
-    axis: 'y',
+    axis: 'x',
     autoplayInterval: 5000,
     autoplay: true,
     icon1: 'fa-chevron-right',
