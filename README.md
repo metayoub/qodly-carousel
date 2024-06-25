@@ -1,6 +1,6 @@
 # Overview
 
-Carousel component for Qodly studio
+The Carousel component is a UI element designed to display a dynamic array of Stylebox components.
 
 ## Carousel
 
@@ -86,5 +86,7 @@ self .carousel_dot.active {
   background-color: #b22222;
 }
 ```
+
 ## TODO
-Orientation && Direction:rtl 
+
+Orientation && Direction:rtl
