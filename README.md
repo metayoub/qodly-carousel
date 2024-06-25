@@ -1,6 +1,7 @@
 # Overview
 
-The Carousel component is a UI element designed to display a dynamic array of Stylebox components.
+The Carousel component is a UI element designed to display a dynamic array of Stylebox components. In these Stylebox components, you can add any components bound with attributes from the datasource (entity selection).
+For more information on Stylebox, please visit the [Stylebox documentation](https://developer.qodly.com/docs/studio/design-webforms/components/stylebox).
 
 ## Carousel
 
