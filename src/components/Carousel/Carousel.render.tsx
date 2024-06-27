@@ -14,6 +14,8 @@ import { CgDanger } from 'react-icons/cg';
 import { EmblaOptionsType } from 'embla-carousel';
 import useEmblaCarousel from 'embla-carousel-react';
 import { ICarouselProps } from './Carousel.config';
+import CarouselDots from './CarouselDots';
+import CarouselArrows from './CarouselArrows';
 
 const Carousel: FC<ICarouselProps> = ({
   direction,
@@ -111,9 +113,18 @@ const Carousel: FC<ICarouselProps> = ({
   return (
     <>
       {ds?.initialValue !== undefined ? (
-        <div ref={connect} style={style} className={cn('carousel', className, classNames)}>
+        <div
+          ref={connect}
+          style={style}
+          className={cn('carousel', className, classNames)}
+          dir={direction}
+        >
           <div className="carousel_container overflow-hidden border h-full" ref={emblaRef}>
-            <div className="carousel_slides h-full flex">
+            <div
+              className={cn('carousel_slides h-full flex', {
+                'flex-col': axis === 'y',
+              })}
+            >
               {entities.map((entity, index) => (
                 <div
                   key={entity.__KEY}
@@ -139,61 +150,24 @@ const Carousel: FC<ICarouselProps> = ({
             </div>
           </div>
           {emblaApi && (
-            <div>
-              {arrows && (
-                <div>
-                  <button
-                    onClick={handlePrev}
-                    className="absolute  top-1/2 transform -translate-y-1/2 carousel_button"
-                  >
-                    <span
-                      className={cn(
-                        'fa fd-component',
-                        'fd-icon',
-                        icon2,
-                        classNames,
-                        'w-7 h-auto fill-current text-gray-400 hover:text-gray-700 ',
-                        'text-3xl',
-                      )}
-                    ></span>
-                  </button>
-
-                  <button
-                    onClick={handleNext}
-                    className="absolute text-zinc-950 hover:text-zinc-400 right-0 top-1/2 transform -translate-y-1/2 right-0 carousel_button"
-                  >
-                    <span
-                      className={cn(
-                        'fa fd-component',
-                        'fd-icon',
-                        icon1,
-                        classNames,
-                        'w-7 h-auto fill-current ml-2 text-gray-400',
-                        'text-3xl ',
-                      )}
-                    ></span>
-                  </button>
-                </div>
-              )}
+            <>
               {dots && (
-                <div className=" flex justify-center relative  bottom-2  hover:bg-black carousel_dots">
-                  {entities.map((_, index) => (
-                    <div>
-                      <div
-                        key={index}
-                        onClick={() => emblaApi.scrollTo(index)}
-                        className={cn(
-                          'carousel_dot w-8 h-1 bg-gray-400 hover:bg-gray-600 rounded-full mx-1 cursor-pointer transition duration-300',
-                          {
-                            'active bg-gray-900 hover:bg-gray-700': index === SelectedScrollSnap,
-                          },
-                        )}
-                      ></div>
-                    </div>
-                  ))}
-                </div>
+                <CarouselDots
+                  totalDots={entities.length}
+                  selectedDot={SelectedScrollSnap}
+                  onDotClick={(index) => emblaApi.scrollTo(index)}
+                />
               )}
-            </div>
+              {arrows && (
+                <CarouselArrows
+                  onPrevClick={handlePrev}
+                  onNextClick={handleNext}
+                  iconPrev={icon2}
+                  iconNext={icon1}
+                  classNames={classNames}
+                />
+              )}
+            </>
           )}
         </div>
       ) : (
