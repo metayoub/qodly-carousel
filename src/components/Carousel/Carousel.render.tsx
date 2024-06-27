@@ -113,7 +113,12 @@ const Carousel: FC<ICarouselProps> = ({
   return (
     <>
       {ds?.initialValue !== undefined ? (
-        <div ref={connect} style={style} className={cn('carousel', className, classNames)}>
+        <div
+          ref={connect}
+          style={style}
+          className={cn('carousel', className, classNames)}
+          dir={direction}
+        >
           <div className="carousel_container overflow-hidden border h-full" ref={emblaRef}>
             <div
               className={cn('carousel_slides h-full flex', {
@@ -145,7 +150,14 @@ const Carousel: FC<ICarouselProps> = ({
             </div>
           </div>
           {emblaApi && (
-            <div>
+            <>
+              {dots && (
+                <CarouselDots
+                  totalDots={entities.length}
+                  selectedDot={SelectedScrollSnap}
+                  onDotClick={(index) => emblaApi.scrollTo(index)}
+                />
+              )}
               {arrows && (
                 <CarouselArrows
                   onPrevClick={handlePrev}
@@ -155,14 +167,7 @@ const Carousel: FC<ICarouselProps> = ({
                   classNames={classNames}
                 />
               )}
-              {dots && (
-                <CarouselDots
-                  totalDots={entities.length}
-                  selectedDot={SelectedScrollSnap}
-                  onDotClick={(index) => emblaApi.scrollTo(index)}
-                />
-              )}
-            </div>
+            </>
           )}
         </div>
       ) : (

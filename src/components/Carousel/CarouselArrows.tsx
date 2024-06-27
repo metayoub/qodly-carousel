@@ -17,11 +17,8 @@ const CarouselArrows: FC<CarouselArrowsProps> = ({
   classNames,
 }) => {
   return (
-    <div>
-      <button
-        onClick={onPrevClick}
-        className="absolute top-1/2 transform -translate-y-1/2 carousel_button"
-      >
+    <div className="flex justify-between">
+      <button onClick={onPrevClick} className="carousel_button">
         <span
           className={cn(
             'fa fd-component',
@@ -33,17 +30,14 @@ const CarouselArrows: FC<CarouselArrowsProps> = ({
           )}
         ></span>
       </button>
-      <button
-        onClick={onNextClick}
-        className="absolute text-zinc-950 hover:text-zinc-400 right-0 top-1/2 transform -translate-y-1/2 carousel_button"
-      >
+      <button onClick={onNextClick} className="carousel_button">
         <span
           className={cn(
             'fa fd-component',
             'fd-icon',
             iconNext,
             classNames,
-            'w-7 h-auto fill-current ml-2 text-gray-400',
+            'w-7 h-auto fill-current text-gray-400 hover:text-gray-700',
             'text-3xl',
           )}
         ></span>
