@@ -71,9 +71,7 @@ export default {
     style: {
       height: '400px',
     },
-    loop: true,
     direction: 'ltr',
-    dots: true,
     arrows: true,
     axis: 'x',
     autoplayInterval: 5000,
@@ -84,9 +82,7 @@ export default {
 } as T4DComponentConfig<ICarouselProps>;
 
 export interface ICarouselProps extends webforms.ComponentProps {
-  loop?: boolean;
   direction?: 'ltr' | 'rtl';
-  dots?: boolean;
   axis?: 'y' | 'x';
   arrows?: boolean;
   autoplayInterval?: number;

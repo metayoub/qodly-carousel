@@ -14,17 +14,14 @@ import { CgDanger } from 'react-icons/cg';
 import { EmblaOptionsType, EngineType, EmblaCarouselType } from 'embla-carousel';
 import useEmblaCarousel from 'embla-carousel-react';
 import { ICarouselProps } from './Carousel.config';
-import CarouselDots from './CarouselDots';
 import CarouselArrows from './CarouselArrows';
 
 const Carousel: FC<ICarouselProps> = ({
   direction,
-  loop,
   icon1,
   icon2,
   arrows,
   axis,
-  dots,
   style,
   iterator,
   className,
@@ -37,6 +34,8 @@ const Carousel: FC<ICarouselProps> = ({
   const scrollListenerRef = useRef<() => void>(() => undefined);
   const listenForScrollRef = useRef(true);
   const hasMoreToLoadRef = useRef(true);
+  const lengthRef = useRef(0);
+  const pageSizeRef = useRef(100);
   const { resolver, query } = useEnhancedEditor(selectResolver);
   const {
     linkedNodes,
@@ -48,7 +47,7 @@ const Carousel: FC<ICarouselProps> = ({
   const options: EmblaOptionsType = {
     direction: direction,
     axis: axis,
-    loop: loop,
+    // loop: loop,
     dragFree: true,
     containScroll: 'keepSnaps',
     watchResize: false,
@@ -106,13 +105,20 @@ const Carousel: FC<ICarouselProps> = ({
   });
 
   const [emblaRef, emblaApi] = useEmblaCarousel(options);
-  const [SelectedScrollSnap, setSelectedScrollSnap] = useState(0);
-  const [count, setCount] = useState(0);
 
   useEffect(() => {
+    if (!ds) return;
     const fetch = async () => {
-      const length = await ds.getValue('length');
-      setCount(length);
+      const fetchedLength = await ds.getValue('length');
+      // WorkAround to fetch only the PageSize
+      const pageSize = ds.getPageSize();
+      pageSizeRef.current = pageSize;
+      lengthRef.current = fetchedLength;
+      setStep({
+        start: 0,
+        end: pageSize,
+      });
+
       fetchIndex(0);
     };
     fetch();
@@ -124,8 +130,14 @@ const Carousel: FC<ICarouselProps> = ({
     }
 
     const cb = async () => {
-      const length = await ds.getValue('length');
-      setCount(length);
+      const fetchedLength = await ds.getValue('length');
+      lengthRef.current = fetchedLength;
+      const pageSize = ds.getPageSize();
+      pageSizeRef.current = pageSize;
+      setStep({
+        start: 0,
+        end: pageSize,
+      });
       fetchIndex(0);
     };
 
@@ -165,28 +177,29 @@ const Carousel: FC<ICarouselProps> = ({
     (emblaApi: EmblaCarouselType) => {
       if (!listenForScrollRef.current) return;
       setLoadingMore((loadingMore) => {
-        // const lastSlide = emblaApi.slideNodes().length - 1;
-        const selectedScrollSnap = emblaApi.selectedScrollSnap();
-        // const lastSlideInView = emblaApi.slidesInView().includes(lastSlide);
-        const lastSlideInView = page.end - selectedScrollSnap < 5;
-        const loadMore = !loadingMore && lastSlideInView; // reload when it's 5 last element
+        const lastSlide = emblaApi.slideNodes().length - 1;
+        const lastSlideInView = emblaApi.slidesInView().includes(lastSlide);
+        const loadMore = !loadingMore && lastSlideInView;
         if (loadMore) {
+          const firstSlideInView = emblaApi.slidesInView()[0];
           listenForScrollRef.current = false;
           setStep({
-            start: selectedScrollSnap + 1,
-            end: selectedScrollSnap + 100 < count ? selectedScrollSnap + 100 : count,
+            start: firstSlideInView,
+            end:
+              firstSlideInView + pageSizeRef.current < lengthRef.current
+                ? firstSlideInView + pageSizeRef.current
+                : lengthRef.current,
           });
           fetchIndex(0);
 
           setHasMoreToLoad(false);
-          setSelectedScrollSnap(selectedScrollSnap);
-          // emblaApi.off('scroll', scrollListenerRef.current);
+          emblaApi.off('scroll', scrollListenerRef.current);
         }
 
         return loadingMore || lastSlideInView;
       });
     },
-    [count], // maybe you will need page.end, fetchIndex, setStep
+    [lengthRef.current, pageSizeRef.current], // maybe you will need page.end, fetchIndex, setStep
   );
 
   const addScrollListener = useCallback(
@@ -228,7 +241,7 @@ const Carousel: FC<ICarouselProps> = ({
               {entities.map((entity, index) => (
                 <div
                   key={entity.__KEY}
-                  className={`"${index === SelectedScrollSnap ? 'border-2 border-black ' : 'border-1'} carousel_slide relative h-full flex-shrink-0 w-full"`}
+                  className={`carousel_slide relative h-full flex-shrink-0 w-full"`}
                   style={childStyle}
                 >
                   <EntityProvider
@@ -247,13 +260,13 @@ const Carousel: FC<ICarouselProps> = ({
                   </EntityProvider>
                 </div>
               ))}
-              {hasMoreToLoad && (
+              {(hasMoreToLoad || page.fetching) && (
                 <div
                   className={'carousel-infinite-scroll'.concat(
                     loadingMore ? ' carousel-infinite-scroll--loading-more' : '',
                   )}
                 >
-                  loading more ....
+                  loading ...
                   <span className="carousel-infinite-scroll__spinner" />
                 </div>
               )}
@@ -261,13 +274,6 @@ const Carousel: FC<ICarouselProps> = ({
           </div>
           {emblaApi && (
             <>
-              {dots && (
-                <CarouselDots
-                  totalDots={entities.length}
-                  selectedDot={SelectedScrollSnap}
-                  onDotClick={(index) => emblaApi.scrollTo(index)}
-                />
-              )}
               {arrows && (
                 <CarouselArrows
                   onPrevClick={handlePrev}

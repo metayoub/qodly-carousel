@@ -15,7 +15,6 @@ Customizable carousel component for seamlessly presenting a variety of content i
 | ------------------- | ------- | ------------------ | ----------------------------------------------------------------------------------------------------- |
 | `Slides to display` | Number  | `3`                | Determines the number of items you want to display per slide.                                         |
 | `Loop`              | Boolean | `true`             | Determines whether the carousel should loop back to the beginning after reaching the last item.       |
-| `Dots`              | Boolean | `true`             | Specifies whether to display navigation dots at the bottom of the carousel.                           |
 | `Arrows`            | Boolean | `true`             | Controls the visibility of arrow buttons for navigating to the next or previous item in the carousel. |
 | `Direction`         | String  | `ltr`              | Defines the direction of the carousel. Choose from `rtl`, `ltr`.                                      |
 | `Orientation`       | String  | `x`                | Specifies the orientation of the carousel movement. Choose from `x`, `y`.                             |
