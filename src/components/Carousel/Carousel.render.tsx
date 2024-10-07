@@ -37,6 +37,13 @@ const Carousel: FC<ICarouselProps> = ({
   const scrollListenerRef = useRef<() => void>(() => undefined);
   const listenForScrollRef = useRef(true);
   const hasMoreToLoadRef = useRef(true);
+  const { resolver, query } = useEnhancedEditor(selectResolver);
+  const {
+    linkedNodes,
+    connectors: { connect },
+  } = useEnhancedNode((node) => {
+    return { linkedNodes: node.data.linkedNodes };
+  });
 
   const options: EmblaOptionsType = {
     direction: direction,
@@ -51,7 +58,13 @@ const Carousel: FC<ICarouselProps> = ({
 
         emblaApi.reInit();
         const newEngine = emblaApi.internalEngine();
-        const copyEngineModules: (keyof EngineType)[] = ['location', 'target', 'scrollBody'];
+        const copyEngineModules: (keyof EngineType)[] = [
+          'scrollBody',
+          'location',
+          'offsetLocation',
+          'previousLocation',
+          'target',
+        ];
         copyEngineModules.forEach((engineModule) => {
           Object.assign(newEngine[engineModule], oldEngine[engineModule]);
         });
@@ -81,13 +94,7 @@ const Carousel: FC<ICarouselProps> = ({
       }
     },
   };
-  const { resolver, query } = useEnhancedEditor(selectResolver);
-  const {
-    linkedNodes,
-    connectors: { connect },
-  } = useEnhancedNode((node) => {
-    return { linkedNodes: node.data.linkedNodes };
-  });
+
   const child = linkedNodes.carousel ? query.node(linkedNodes.carousel).get() : null;
   const childStyle = child?.data.props.style;
 
