@@ -2,7 +2,7 @@
   "app_id": "qodly_6dbef3549d4d42171b02",
   "name": "qodly-carousel",
   "private": true,
-  "version": "0.0.0",
+  "version": "0.2.0",
   "type": "module",
   "author": {
     "name": "Qodly Team",
@@ -17,13 +17,13 @@
     "format": "prettier --write \"**/*.{ts,tsx,js,mjs,json,jsx,html,css}\""
   },
   "dependencies": {
-    "@ws-ui/webform-editor": "0.3.20",
+    "@ws-ui/webform-editor": "0.3.36",
     "embla-carousel-react": "^8.3.0",
     "react": "^17.0.2",
     "react-dom": "^17.0.2"
   },
   "devDependencies": {
-    "@qodly/cli": "^0.2.2",
+    "@qodly/cli": "^0.2.20",
     "@types/react": "^18.2.65",
     "@types/react-dom": "^18.2.21",
     "@typescript-eslint/eslint-plugin": "^7.2.0",
