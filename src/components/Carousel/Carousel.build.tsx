@@ -16,8 +16,6 @@ const Carousel: FC<ICarouselProps> = ({
   arrows,
   direction,
   icon1,
-  dots,
-  loop,
   axis,
   icon2,
   style,
@@ -26,7 +24,7 @@ const Carousel: FC<ICarouselProps> = ({
 
   classNames = [],
 }) => {
-  const options: EmblaOptionsType = { direction: direction, axis: axis, loop: loop };
+  const options: EmblaOptionsType = { direction: direction, axis: axis };
   const Css: CSSProperties = {
     width: style?.width || '100%',
   };
@@ -92,13 +90,6 @@ const Carousel: FC<ICarouselProps> = ({
                       )}
                     ></span>
                   </button>
-                </div>
-              )}
-              {dots && (
-                <div className="carousel_dots absolute bottom-1 w-full flex justify-center right-2">
-                  <div className="carousel_dot w-8 h-1 bg-gray-400 hover:bg-gray-600 rounded-full mx-2 cursor-pointer transition duration-300"></div>
-                  <div className="carousel_dot w-8 h-1 bg-gray-400 hover:bg-gray-600 rounded-full mx-2 cursor-pointer transition duration-300"></div>
-                  <div className="carousel_dot w-8 h-1 bg-gray-400 hover:bg-gray-600 rounded-full mx-2 cursor-pointer transition duration-300"></div>
                 </div>
               )}
             </div>

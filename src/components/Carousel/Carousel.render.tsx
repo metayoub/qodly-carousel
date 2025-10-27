@@ -1,4 +1,4 @@
-import { FC, useCallback, useEffect, useState } from 'react';
+import { FC, useCallback, useEffect, useRef, useState } from 'react';
 import {
   useSources,
   useEnhancedEditor,
@@ -11,20 +11,17 @@ import {
 import cn from 'classnames';
 import { Element } from '@ws-ui/craftjs-core';
 import { CgDanger } from 'react-icons/cg';
-import { EmblaOptionsType } from 'embla-carousel';
+import { EmblaOptionsType, EngineType, EmblaCarouselType } from 'embla-carousel';
 import useEmblaCarousel from 'embla-carousel-react';
 import { ICarouselProps } from './Carousel.config';
-import CarouselDots from './CarouselDots';
 import CarouselArrows from './CarouselArrows';
 
 const Carousel: FC<ICarouselProps> = ({
   direction,
-  loop,
   icon1,
   icon2,
   arrows,
   axis,
-  dots,
   style,
   iterator,
   className,
@@ -32,7 +29,13 @@ const Carousel: FC<ICarouselProps> = ({
   autoplayInterval = 5000,
   autoplay,
 }) => {
-  const options: EmblaOptionsType = { direction: direction, axis: axis, loop: loop };
+  const [hasMoreToLoad, setHasMoreToLoad] = useState(true);
+  const [loadingMore, setLoadingMore] = useState(false);
+  const scrollListenerRef = useRef<() => void>(() => undefined);
+  const listenForScrollRef = useRef(true);
+  const hasMoreToLoadRef = useRef(true);
+  const lengthRef = useRef(0);
+  const pageSizeRef = useRef(100);
   const { resolver, query } = useEnhancedEditor(selectResolver);
   const {
     linkedNodes,
@@ -40,20 +43,85 @@ const Carousel: FC<ICarouselProps> = ({
   } = useEnhancedNode((node) => {
     return { linkedNodes: node.data.linkedNodes };
   });
+
+  const options: EmblaOptionsType = {
+    direction: direction,
+    axis: axis,
+    // loop: loop,
+    dragFree: true,
+    containScroll: 'keepSnaps',
+    watchResize: false,
+    watchSlides: (emblaApi) => {
+      const reloadEmbla = (): void => {
+        const oldEngine = emblaApi.internalEngine();
+
+        emblaApi.reInit();
+        const newEngine = emblaApi.internalEngine();
+        const copyEngineModules: (keyof EngineType)[] = [
+          'scrollBody',
+          'location',
+          'offsetLocation',
+          'previousLocation',
+          'target',
+        ];
+        copyEngineModules.forEach((engineModule) => {
+          Object.assign(newEngine[engineModule], oldEngine[engineModule]);
+        });
+
+        newEngine.translate.to(oldEngine.location.get());
+        const { index } = newEngine.scrollTarget.byDistance(0, false);
+        newEngine.index.set(index);
+        newEngine.animation.start();
+
+        setLoadingMore(false);
+        listenForScrollRef.current = true;
+      };
+
+      const reloadAfterPointerUp = (): void => {
+        emblaApi.off('pointerUp', reloadAfterPointerUp);
+        reloadEmbla();
+      };
+
+      const engine = emblaApi.internalEngine();
+
+      if (hasMoreToLoadRef.current && engine.dragHandler.pointerDown()) {
+        const boundsActive = engine.limit.reachedMax(engine.target.get());
+        engine.scrollBounds.toggleActive(boundsActive);
+        emblaApi.on('pointerUp', reloadAfterPointerUp);
+      } else {
+        reloadEmbla();
+      }
+    },
+  };
+
   const child = linkedNodes.carousel ? query.node(linkedNodes.carousel).get() : null;
   const childStyle = child?.data.props.style;
 
   const {
     sources: { datasource: ds, currentElement: currentDs },
   } = useSources();
-  const { entities, fetchIndex } = useDataLoader({
+  const { page, setStep, entities, fetchIndex } = useDataLoader({
     source: ds,
   });
 
   const [emblaRef, emblaApi] = useEmblaCarousel(options);
-  const [SelectedScrollSnap, setSelectedScrollSnap] = useState(0);
+
   useEffect(() => {
-    fetchIndex(0);
+    if (!ds) return;
+    const fetch = async () => {
+      const fetchedLength = await ds.getValue('length');
+      // WorkAround to fetch only the PageSize
+      const pageSize = ds.getPageSize();
+      pageSizeRef.current = pageSize;
+      lengthRef.current = fetchedLength;
+      setStep({
+        start: 0,
+        end: pageSize,
+      });
+
+      fetchIndex(0);
+    };
+    fetch();
   }, []);
 
   useEffect(() => {
@@ -61,10 +129,16 @@ const Carousel: FC<ICarouselProps> = ({
       return;
     }
 
-    const cb = () => {
-      ds.getValue('length').then((_length) => {
-        fetchIndex(0);
+    const cb = async () => {
+      const fetchedLength = await ds.getValue('length');
+      lengthRef.current = fetchedLength;
+      const pageSize = ds.getPageSize();
+      pageSizeRef.current = pageSize;
+      setStep({
+        start: 0,
+        end: pageSize,
       });
+      fetchIndex(0);
     };
 
     ds.addListener('changed', cb);
@@ -99,17 +173,56 @@ const Carousel: FC<ICarouselProps> = ({
   const handlePrev = () => emblaApi && emblaApi.scrollPrev();
   const handleNext = () => emblaApi && emblaApi.scrollNext();
 
-  const onSelect = useCallback(() => {
-    if (emblaApi) {
-      setSelectedScrollSnap(emblaApi.selectedScrollSnap());
-    }
-  }, [emblaApi]);
+  const onScroll = useCallback(
+    (emblaApi: EmblaCarouselType) => {
+      if (!listenForScrollRef.current) return;
+      setLoadingMore((loadingMore) => {
+        const lastSlide = emblaApi.slideNodes().length - 1;
+        const lastSlideInView = emblaApi.slidesInView().includes(lastSlide);
+        const loadMore = !loadingMore && lastSlideInView;
+        if (loadMore) {
+          const firstSlideInView = emblaApi.slidesInView()[0];
+          listenForScrollRef.current = false;
+          setStep({
+            start: firstSlideInView,
+            end:
+              firstSlideInView + pageSizeRef.current < lengthRef.current
+                ? firstSlideInView + pageSizeRef.current
+                : lengthRef.current,
+          });
+          fetchIndex(0);
+
+          setHasMoreToLoad(false);
+          emblaApi.off('scroll', scrollListenerRef.current);
+        }
+
+        return loadingMore || lastSlideInView;
+      });
+    },
+    [lengthRef.current, pageSizeRef.current], // maybe you will need page.end, fetchIndex, setStep
+  );
+
+  const addScrollListener = useCallback(
+    (emblaApi: EmblaCarouselType) => {
+      scrollListenerRef.current = () => onScroll(emblaApi);
+      emblaApi.on('scroll', scrollListenerRef.current);
+    },
+    [onScroll],
+  );
 
   useEffect(() => {
     if (!emblaApi) return;
-    emblaApi.on('reInit', onSelect);
-    emblaApi.on('select', onSelect);
-  }, [emblaApi, onSelect]);
+    addScrollListener(emblaApi);
+
+    const onResize = () => emblaApi.reInit();
+    window.addEventListener('resize', onResize);
+    emblaApi.on('destroy', () => window.removeEventListener('resize', onResize));
+  }, [emblaApi, addScrollListener]);
+
+  useEffect(() => {
+    hasMoreToLoadRef.current = hasMoreToLoad;
+  }, [hasMoreToLoad]);
+
   return (
     <>
       {ds?.initialValue !== undefined ? (
@@ -128,7 +241,7 @@ const Carousel: FC<ICarouselProps> = ({
               {entities.map((entity, index) => (
                 <div
                   key={entity.__KEY}
-                  className={`"${index === SelectedScrollSnap ? 'border-2 border-black ' : 'border-1'} carousel_slide relative h-full flex-shrink-0 w-full"`}
+                  className={`carousel_slide relative h-full flex-shrink-0 w-full"`}
                   style={childStyle}
                 >
                   <EntityProvider
@@ -147,17 +260,20 @@ const Carousel: FC<ICarouselProps> = ({
                   </EntityProvider>
                 </div>
               ))}
+              {(hasMoreToLoad || page.fetching) && (
+                <div
+                  className={'carousel-infinite-scroll'.concat(
+                    loadingMore ? ' carousel-infinite-scroll--loading-more' : '',
+                  )}
+                >
+                  loading ...
+                  <span className="carousel-infinite-scroll__spinner" />
+                </div>
+              )}
             </div>
           </div>
           {emblaApi && (
             <>
-              {dots && (
-                <CarouselDots
-                  totalDots={entities.length}
-                  selectedDot={SelectedScrollSnap}
-                  onDotClick={(index) => emblaApi.scrollTo(index)}
-                />
-              )}
               {arrows && (
                 <CarouselArrows
                   onPrevClick={handlePrev}

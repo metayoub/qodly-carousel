@@ -10,18 +10,6 @@ const commonSettings: TSetting[] = [
     defaultValue: true,
   },
   {
-    key: 'loop',
-    label: 'Loop',
-    type: ESetting.CHECKBOX,
-    defaultValue: true,
-  },
-  {
-    key: 'dots',
-    label: 'Dots',
-    type: ESetting.CHECKBOX,
-    defaultValue: true,
-  },
-  {
     key: 'arrows',
     label: 'Arrows',
     type: ESetting.CHECKBOX,
