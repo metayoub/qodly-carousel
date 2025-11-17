@@ -36,6 +36,7 @@ const Carousel: FC<ICarouselProps> = ({
   const hasMoreToLoadRef = useRef(true);
   const lengthRef = useRef(0);
   const pageSizeRef = useRef(100);
+  const [data, setData] = useState<any>([]);
   const { resolver, query } = useEnhancedEditor(selectResolver);
   const {
     linkedNodes,
@@ -100,6 +101,7 @@ const Carousel: FC<ICarouselProps> = ({
   const {
     sources: { datasource: ds, currentElement: currentDs },
   } = useSources();
+
   const { page, setStep, entities, fetchIndex } = useDataLoader({
     source: ds,
   });
@@ -108,7 +110,14 @@ const Carousel: FC<ICarouselProps> = ({
 
   useEffect(() => {
     if (!ds) return;
+
     const fetch = async () => {
+      //fix data array not displaying
+      if (ds.dataType === 'array') {
+        const arr = await ds.getValue();
+        setData(arr);
+        return;
+      }
       const fetchedLength = await ds.getValue('length');
       // WorkAround to fetch only the PageSize
       const pageSize = ds.getPageSize();
@@ -118,7 +127,6 @@ const Carousel: FC<ICarouselProps> = ({
         start: 0,
         end: pageSize,
       });
-
       fetchIndex(0);
     };
     fetch();
@@ -138,7 +146,7 @@ const Carousel: FC<ICarouselProps> = ({
         start: 0,
         end: pageSize,
       });
-      fetchIndex(0);
+      await fetchIndex(0);
     };
 
     ds.addListener('changed', cb);
@@ -170,8 +178,24 @@ const Carousel: FC<ICarouselProps> = ({
     };
   }, [emblaApi, autoplayInterval, autoplay]);
 
-  const handlePrev = () => emblaApi && emblaApi.scrollPrev();
-  const handleNext = () => emblaApi && emblaApi.scrollNext();
+  //fix scrolling issues
+  const handlePrev = () => {
+    if (!emblaApi) return;
+    if (ds.dataType === 'array') {
+      if (emblaApi.canScrollPrev()) emblaApi.scrollPrev();
+    } else {
+      emblaApi.scrollPrev();
+    }
+  };
+
+  const handleNext = () => {
+    if (!emblaApi) return;
+    if (ds.dataType === 'array') {
+      if (emblaApi.canScrollNext()) emblaApi.scrollNext();
+    } else {
+      emblaApi.scrollNext();
+    }
+  };
 
   const onScroll = useCallback(
     (emblaApi: EmblaCarouselType) => {
@@ -217,11 +241,17 @@ const Carousel: FC<ICarouselProps> = ({
     const onResize = () => emblaApi.reInit();
     window.addEventListener('resize', onResize);
     emblaApi.on('destroy', () => window.removeEventListener('resize', onResize));
-  }, [emblaApi, addScrollListener]);
+  }, [data, emblaApi, addScrollListener]);
 
   useEffect(() => {
     hasMoreToLoadRef.current = hasMoreToLoad;
   }, [hasMoreToLoad]);
+
+  useEffect(() => {
+    if (entities.length > 0) {
+      setData(entities);
+    }
+  }, [entities]);
 
   return (
     <>
@@ -238,10 +268,10 @@ const Carousel: FC<ICarouselProps> = ({
                 'flex-col': axis === 'y',
               })}
             >
-              {entities.map((entity, index) => (
+              {data.map((entity: any, index: any) => (
                 <div
                   key={entity.__KEY}
-                  className={`carousel_slide relative h-full flex-shrink-0 w-full"`}
+                  className="carousel_slide relative h-full flex-shrink-0 w-full"
                   style={childStyle}
                 >
                   <EntityProvider
@@ -260,7 +290,7 @@ const Carousel: FC<ICarouselProps> = ({
                   </EntityProvider>
                 </div>
               ))}
-              {(hasMoreToLoad || page.fetching) && (
+              {(hasMoreToLoad || (page as any).fetching) && (
                 <div
                   className={'carousel-infinite-scroll'.concat(
                     loadingMore ? ' carousel-infinite-scroll--loading-more' : '',
