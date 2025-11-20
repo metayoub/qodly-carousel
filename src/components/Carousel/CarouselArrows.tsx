@@ -17,7 +17,7 @@ const CarouselArrows: FC<CarouselArrowsProps> = ({
   classNames,
 }) => {
   return (
-    <div className="flex justify-between">
+    <div className="flex justify-between items-center absolute top-1/2 w-full">
       <button onClick={onPrevClick} className="carousel_button">
         <span
           className={cn(

@@ -63,7 +63,7 @@ export default {
       },
     ],
     datasources: {
-      accept: ['entitysel'],
+      accept: ['entitysel', 'array'],
     },
   },
   defaultProps: {
