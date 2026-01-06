@@ -45,12 +45,15 @@ const Carousel: FC<ICarouselProps> = ({
     return { linkedNodes: node.data.linkedNodes };
   });
 
+  const [isLoop, setIsLoop] = useState(false);
+
   const options: EmblaOptionsType = {
     direction: direction,
     axis: axis,
-    // loop: loop,
+    loop: isLoop,
     dragFree: true,
     containScroll: 'keepSnaps',
+    align: 'start',
     watchResize: false,
     watchSlides: (emblaApi) => {
       const reloadEmbla = (): void => {
@@ -116,6 +119,7 @@ const Carousel: FC<ICarouselProps> = ({
       if (ds.dataType === 'array') {
         const arr = await ds.getValue();
         setData(arr);
+        setIsLoop(true);
         return;
       }
       const fetchedLength = await ds.getValue('length');
